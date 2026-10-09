@@ -1,27 +1,76 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
-
-:root {
-  font-family: 'Inter', system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
-
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #0f172a;
-
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
+body {
+  margin: 0;
+  font-family:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell",
+    "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
 }
 
+/* Autofill suggestion background color */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus {
+  background-color: white !important;
+  color: inherit !important;
+}
+
+.css-j3jqhj-MuiInputBase-input-MuiOutlinedInput-input:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0 100px rgba(0, 0, 0, 0) inset !important;
+}
+
+/* Override suggestion dropdown background color */
+input {
+  transition: background-color 5000s ease-in-out 0s;
+  /* Background color */
+}
+
+.MuiInputBase-input.MuiOutlinedInput-input:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0 100px rgba(0, 0, 0, 0) inset !important;
+}
+
+html,
 body {
   margin: 0;
-  min-height: 100vh;
+  padding: 0;
+  height: 100%;
+  overflow-x: hidden;
+}
+
+.custom-dark-link {
+  stroke: white !important;
+  stroke-width: 2;
+}
+
+.custom-light-link {
+  stroke: black !important;
+  stroke-width: 2;
+}
+
+/* Hide scrollbar by default */
+.custom-page-scroll::-webkit-scrollbar {
+  width: 8px;
+  background: transparent;
+}
+
+/* Hide thumb by default */
+.custom-page-scroll::-webkit-scrollbar-thumb {
+  background-color: transparent;
+  border-radius: 8px;
+}
+
+/* When sidebar or any of its children are hovered */
+.custom-page-scroll:hover::-webkit-scrollbar-thumb,
+.custom-page-scroll:has(:hover)::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.15); /* For dark theme */
+}
+
+/* Light theme (if you toggle with class like .light) */
+.custom-page-scroll.light:hover::-webkit-scrollbar-thumb,
+.custom-page-scroll.light:has(:hover)::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.3);
 }
