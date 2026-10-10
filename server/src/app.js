@@ -1,6 +1,8 @@
+import "dotenv/config";
 import express from "express";
 import cors from "cors";
 import routes from "./routes/index.js";
+import { connectDB } from "./config/database.js";
 
 const app = express();
 
@@ -27,10 +29,11 @@ app.use((req, res) => {
   });
 });
 
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5001;
 
-app.listen(PORT, () => {
+app.listen(PORT, async () => {
   console.log(`Server is running on port ${PORT}`);
+  await connectDB();
 });
 
 export default app;
