@@ -5,6 +5,8 @@ body {
     "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-color: #131517;
+  color: #ffffff;
 }
 
 code {
@@ -15,22 +17,18 @@ code {
 input:-webkit-autofill,
 input:-webkit-autofill:hover,
 input:-webkit-autofill:focus {
-  background-color: white !important;
-  color: inherit !important;
+  -webkit-box-shadow: 0 0 0 1000px rgba(26, 32, 40, 0.95) inset !important;
+  -webkit-text-fill-color: #ffffff !important;
+  color: #ffffff !important;
+  transition: background-color 5000s ease-in-out 0s;
 }
 
 .css-j3jqhj-MuiInputBase-input-MuiOutlinedInput-input:-webkit-autofill {
-  -webkit-box-shadow: 0 0 0 100px rgba(0, 0, 0, 0) inset !important;
-}
-
-/* Override suggestion dropdown background color */
-input {
-  transition: background-color 5000s ease-in-out 0s;
-  /* Background color */
+  -webkit-box-shadow: 0 0 0 1000px rgba(26, 32, 40, 0.95) inset !important;
 }
 
 .MuiInputBase-input.MuiOutlinedInput-input:-webkit-autofill {
-  -webkit-box-shadow: 0 0 0 100px rgba(0, 0, 0, 0) inset !important;
+  -webkit-box-shadow: 0 0 0 1000px rgba(26, 32, 40, 0.95) inset !important;
 }
 
 html,
@@ -38,6 +36,8 @@ body {
   margin: 0;
   padding: 0;
   height: 100%;
+  background-color: #131517;
+  color: #ffffff;
   overflow-x: hidden;
 }
 

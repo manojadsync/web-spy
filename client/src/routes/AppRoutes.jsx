@@ -10,10 +10,16 @@ const PrivateRoute = ({ children }) => {
   return isAuthenticated ? children : <Navigate to="/" replace />;
 };
 
+const AdminRoute = ({ children }) => {
+  const { userData } = useAuth();
+  const isAdmin = userData?.role === 'admin';
+  return isAdmin ? children : <Navigate to="/dashboard" replace />;
+};
+
 const PublicRoute = ({ children }) => {
   const { isAuthenticated } = useAuth();
   // Redirect to dashboard if already logged in
-  return isAuthenticated ? <Navigate to="/admin/dashboard" replace /> : children;
+  return isAuthenticated ? <Navigate to="/dashboard" replace /> : children;
 };
 
 const AppRoutes = () => {
@@ -21,34 +27,52 @@ const AppRoutes = () => {
     <BrowserRouter>
       <Routes>
         {/* Public Routes */}
-        {publicRoutes.map((route, index) => (
-          <Route 
-            key={index} 
-            path={route.path} 
-            element={
-              <PublicRoute>
-                <route.component />
-              </PublicRoute>
-            } 
-          />
-        ))}
+        {publicRoutes.map((route, index) => {
+          const isInviteRoute = route.path.includes('complete-profile');
+          return (
+            <Route 
+              key={index} 
+              path={route.path} 
+              element={
+                isInviteRoute ? (
+                  <route.component />
+                ) : (
+                  <PublicRoute>
+                    <route.component />
+                  </PublicRoute>
+                )
+              } 
+            />
+          );
+        })}
 
-        {/* Private Admin Routes wrapped in Layout */}
+        {/* Private Routes wrapped in AdminLayout */}
         <Route 
-          path="/admin" 
           element={
             <PrivateRoute>
               <AdminLayout />
             </PrivateRoute>
           }
         >
-          <Route index element={<Navigate to="/admin/dashboard" replace />} />
           {privateRoutes.map((route, index) => {
-            const nestedPath = route.path.replace('/admin/', '');
+            const element = route.adminOnly ? (
+              <AdminRoute>
+                <route.component />
+              </AdminRoute>
+            ) : (
+              <route.component />
+            );
             return (
-              <Route key={index} path={nestedPath} element={<route.component />} />
+              <Route 
+                key={index} 
+                path={route.path} 
+                element={element} 
+              />
             );
           })}
+          {/* Default redirect for /admin or index to /dashboard */}
+          <Route path="/admin" element={<Navigate to="/dashboard" replace />} />
+          <Route path="/admin/*" element={<Navigate to="/dashboard" replace />} />
         </Route>
 
         {/* Fallback Route */}

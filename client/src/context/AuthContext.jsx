@@ -52,6 +52,14 @@ export const AuthContextProvider = ({ children }) => {
     setUser(null);
   };
 
+  const updateUser = React.useCallback((newUserData) => {
+    setUser((prev) => {
+      const merged = { ...prev, ...newUserData };
+      localStorage.setItem("user", JSON.stringify(merged));
+      return merged;
+    });
+  }, []);
+
   // Keep state synced with localStorage changes
   useEffect(() => {
     const handleStorageChange = () => {
@@ -72,7 +80,8 @@ export const AuthContextProvider = ({ children }) => {
         isLoading,
         login,
         logout,
-        saveData
+        saveData,
+        updateUser,
       }}
     >
       {children}
