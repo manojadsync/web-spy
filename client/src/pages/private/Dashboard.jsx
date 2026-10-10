@@ -13,37 +13,6 @@ const Dashboard = () => {
 
   return (
     <Box>
-      {/* Header */}
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: { xs: "flex-start", sm: "center" },
-          flexDirection: { xs: "column", sm: "row" },
-          gap: 2,
-          mb: 3.5,
-        }}
-      >
-        <Box>
-          <Typography
-            variant="h5"
-            sx={{
-              fontWeight: 800,
-              color: theme.palette.text.primary,
-              letterSpacing: "-0.025em",
-              fontSize: { xs: "1.4rem", sm: "1.7rem" },
-            }}
-          >
-            Dashboard Overview
-          </Typography>
-          <Typography
-            variant="body2"
-            sx={{ color: theme.palette.text.secondary, mt: 0.5, fontSize: "0.88rem" }}
-          >
-            Real-time telemetry, active browser nodes, and team activity.
-          </Typography>
-        </Box>
-      </Box>
 
       {/* Metrics Row */}
       <Box

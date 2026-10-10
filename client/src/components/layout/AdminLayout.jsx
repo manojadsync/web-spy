@@ -547,7 +547,7 @@ const AdminLayout = () => {
           bgcolor: theme.palette.background.pageContent,
         }}
       >
-        <Toolbar sx={{ height: 68 }} />
+        <Toolbar sx={{ height: 80, minHeight: "80px !important" }} />
         <Box className="admin-content-inner">
           <Outlet />
         </Box>

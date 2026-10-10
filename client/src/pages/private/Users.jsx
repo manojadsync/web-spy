@@ -20,6 +20,7 @@ import {
   Snackbar,
   MenuItem,
   InputAdornment,
+  Switch,
   useTheme,
   alpha,
 } from "@mui/material";
@@ -144,7 +145,9 @@ const Users = () => {
         setInviteError(res.message || "Failed to invite user");
       }
     } catch (err) {
-      setInviteError(err.response?.data?.message || "Failed to create invitation");
+      setInviteError(
+        err.response?.data?.message || "Failed to create invitation",
+      );
     } finally {
       setInviting(false);
     }
@@ -162,12 +165,16 @@ const Users = () => {
     try {
       const res = await userApi.toggleUserStatus(user.id);
       if (res.success) {
-        setSnackbarMessage(`User ${user.isActive ? "deactivated" : "activated"} successfully`);
+        setSnackbarMessage(
+          `User ${user.isActive ? "deactivated" : "activated"} successfully`,
+        );
         setSnackbarOpen(true);
         fetchUsers();
       }
     } catch (err) {
-      setSnackbarMessage(err.response?.data?.message || "Failed to update user status");
+      setSnackbarMessage(
+        err.response?.data?.message || "Failed to update user status",
+      );
       setSnackbarOpen(true);
     }
   };
@@ -184,7 +191,9 @@ const Users = () => {
         fetchUsers();
       }
     } catch (err) {
-      setSnackbarMessage(err.response?.data?.message || "Failed to delete user");
+      setSnackbarMessage(
+        err.response?.data?.message || "Failed to delete user",
+      );
       setSnackbarOpen(true);
     } finally {
       setDeleting(false);
@@ -202,7 +211,9 @@ const Users = () => {
   }
 
   const totalUsers = users.length;
-  const activeUsers = users.filter((u) => u.status === "active" && u.isActive).length;
+  const activeUsers = users.filter(
+    (u) => u.status === "active" && u.isActive,
+  ).length;
   const pendingInvites = users.filter((u) => u.status === "invited").length;
 
   // Filtered users for table
@@ -227,50 +238,6 @@ const Users = () => {
 
   return (
     <Box>
-      {/* Header and Action Button */}
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: { xs: "column", sm: "row" },
-          justifyContent: "space-between",
-          alignItems: { xs: "flex-start", sm: "center" },
-          gap: 2,
-          mb: 3.5,
-        }}
-      >
-        <Box>
-          <Typography
-            variant="h5"
-            sx={{
-              fontWeight: 800,
-              color: theme.palette.text.primary,
-              letterSpacing: "-0.025em",
-              fontSize: { xs: "1.4rem", sm: "1.7rem" },
-            }}
-          >
-            User Management
-          </Typography>
-          <Typography
-            variant="body2"
-            sx={{ color: theme.palette.text.secondary, mt: 0.5, fontSize: "0.88rem" }}
-          >
-            Invite new team members, manage account status, and track permissions.
-          </Typography>
-        </Box>
-        <GradientButton
-          onClick={handleOpenInvite}
-          startIcon={<AddRoundedIcon />}
-          sx={{
-            px: 2.8,
-            py: 1.2,
-            borderRadius: "12px",
-            fontSize: "0.88rem",
-          }}
-        >
-          Invite User
-        </GradientButton>
-      </Box>
-
       {/* Metrics Cards Grid - Endzone MetricCard Design */}
       <Box
         sx={{
@@ -346,7 +313,9 @@ const Users = () => {
               input: {
                 startAdornment: (
                   <InputAdornment position="start">
-                    <SearchRoundedIcon sx={{ color: theme.palette.text.secondary, fontSize: 20 }} />
+                    <SearchRoundedIcon
+                      sx={{ color: theme.palette.text.secondary, fontSize: 20 }}
+                    />
                   </InputAdornment>
                 ),
               },
@@ -354,7 +323,9 @@ const Users = () => {
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
-                  <SearchRoundedIcon sx={{ color: theme.palette.text.secondary, fontSize: 20 }} />
+                  <SearchRoundedIcon
+                    sx={{ color: theme.palette.text.secondary, fontSize: 20 }}
+                  />
                 </InputAdornment>
               ),
             }}
@@ -366,47 +337,98 @@ const Users = () => {
                 bgcolor: isDark ? "rgba(255, 255, 255, 0.04)" : "#f8fafc",
                 fontSize: "0.86rem",
                 "& fieldset": { borderColor: theme.palette.divider },
-                "&:hover fieldset": { borderColor: theme.palette.text.secondary },
-                "&.Mui-focused fieldset": { borderColor: theme.palette.primary.main },
+                "&:hover fieldset": {
+                  borderColor: theme.palette.text.secondary,
+                },
+                "&.Mui-focused fieldset": {
+                  borderColor: theme.palette.primary.main,
+                },
               },
             }}
           />
 
-          {/* Quick Filter Chips */}
-          <Box sx={{ display: "flex", alignItems: "center", gap: 1, flexWrap: "wrap" }}>
-            {[
-              { id: "all", label: `All Users (${users.length})` },
-              { id: "invited", label: `Pending Invites (${pendingInvites})` },
-            ].map((tab) => {
-              const isSelected = statusFilter === tab.id;
-              return (
-                <Chip
-                  key={tab.id}
-                  label={tab.label}
-                  clickable
-                  onClick={() => setStatusFilter(tab.id)}
-                  sx={{
-                    fontWeight: 700,
-                    fontSize: "0.78rem",
-                    borderRadius: "10px",
-                    px: 0.5,
-                    py: 1.8,
-                    transition: "all 0.2s ease",
-                    background: isSelected
-                      ? GRADIANT_COLOR
-                      : isDark
-                      ? "rgba(255, 255, 255, 0.06)"
-                      : "#f1f5f9",
-                    color: isSelected ? "#ffffff" : theme.palette.text.secondary,
-                    boxShadow: isSelected ? "0 4px 12px rgba(65, 112, 229, 0.35)" : "none",
-                    "&:hover": {
-                      background: isSelected ? GRADIANT_COLOR : isDark ? "rgba(255, 255, 255, 0.12)" : "#e2e8f0",
-                      opacity: 0.95,
-                    },
-                  }}
-                />
-              );
-            })}
+          {/* Switch Toggle (All / Pending) & Invite User Action Button */}
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              gap: 1.5,
+              flexWrap: "wrap",
+            }}
+          >
+            <Box
+              sx={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 0.75,
+              }}
+            >
+              <Typography
+                variant="body2"
+                onClick={() => setStatusFilter("all")}
+                sx={{
+                  fontWeight: 600,
+                  color:
+                    statusFilter === "all"
+                      ? theme.palette.text.primary
+                      : theme.palette.text.secondary,
+                  cursor: "pointer",
+                  userSelect: "none",
+                  fontSize: "0.82rem",
+                  transition: "color 0.2s ease",
+                }}
+              >
+                All ({users.length})
+              </Typography>
+
+              <Switch
+                size="small"
+                checked={statusFilter === "invited"}
+                onChange={(e) =>
+                  setStatusFilter(e.target.checked ? "invited" : "all")
+                }
+                sx={{
+                  "& .MuiSwitch-switchBase.Mui-checked": {
+                    color: "#f59e0b",
+                  },
+                  "& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track": {
+                    backgroundColor: "#f59e0b !important",
+                  },
+                }}
+              />
+
+              <Typography
+                variant="body2"
+                onClick={() => setStatusFilter("invited")}
+                sx={{
+                  fontWeight: 600,
+                  color:
+                    statusFilter === "invited"
+                      ? "#f59e0b"
+                      : theme.palette.text.secondary,
+                  cursor: "pointer",
+                  userSelect: "none",
+                  fontSize: "0.82rem",
+                  transition: "color 0.2s ease",
+                }}
+              >
+                Pending ({pendingInvites})
+              </Typography>
+            </Box>
+
+            <GradientButton
+              onClick={handleOpenInvite}
+              startIcon={<AddRoundedIcon />}
+              sx={{
+                px: 2.2,
+                py: 0.8,
+                borderRadius: "10px",
+                fontSize: "0.82rem",
+                fontWeight: 700,
+              }}
+            >
+              Invite User
+            </GradientButton>
           </Box>
         </Box>
 
@@ -419,8 +441,18 @@ const Users = () => {
         )}
 
         {loading ? (
-          <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", py: 8 }}>
-            <CircularProgress size={36} sx={{ color: theme.palette.primary.main }} />
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              py: 8,
+            }}
+          >
+            <CircularProgress
+              size={36}
+              sx={{ color: theme.palette.primary.main }}
+            />
           </Box>
         ) : (
           <TableContainer>
@@ -527,7 +559,11 @@ const Users = () => {
                     <TableCell
                       colSpan={6}
                       align="center"
-                      sx={{ py: 6, color: theme.palette.text.secondary, borderColor: theme.palette.divider }}
+                      sx={{
+                        py: 6,
+                        color: theme.palette.text.secondary,
+                        borderColor: theme.palette.divider,
+                      }}
                     >
                       {searchQuery || statusFilter !== "all"
                         ? "No users match your search and filter criteria."
@@ -557,13 +593,28 @@ const Users = () => {
                         }}
                       >
                         {/* User Details */}
-                        <TableCell sx={{ py: 2, px: 2.5, borderColor: theme.palette.divider }}>
-                          <Box sx={{ display: "flex", alignItems: "center", gap: 1.8 }}>
+                        <TableCell
+                          sx={{
+                            py: 2,
+                            px: 2.5,
+                            borderColor: theme.palette.divider,
+                          }}
+                        >
+                          <Box
+                            sx={{
+                              display: "flex",
+                              alignItems: "center",
+                              gap: 1.8,
+                            }}
+                          >
                             <Avatar
                               sx={{
                                 width: 40,
                                 height: 40,
-                                background: user.role === "admin" ? GRADIANT_COLOR : theme.palette.primary.main,
+                                background:
+                                  user.role === "admin"
+                                    ? GRADIANT_COLOR
+                                    : theme.palette.primary.main,
                                 color: "#ffffff",
                                 fontSize: "0.88rem",
                                 fontWeight: 700,
@@ -573,10 +624,20 @@ const Users = () => {
                               {(user.name || "U")[0].toUpperCase()}
                             </Avatar>
                             <Box>
-                              <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                              <Box
+                                sx={{
+                                  display: "flex",
+                                  alignItems: "center",
+                                  gap: 1,
+                                }}
+                              >
                                 <Typography
                                   variant="subtitle2"
-                                  sx={{ fontWeight: 700, color: theme.palette.text.primary, fontSize: "0.88rem" }}
+                                  sx={{
+                                    fontWeight: 700,
+                                    color: theme.palette.text.primary,
+                                    fontSize: "0.88rem",
+                                  }}
                                 >
                                   {user.name}
                                 </Typography>
@@ -588,13 +649,21 @@ const Users = () => {
                                       height: 18,
                                       fontSize: "0.62rem",
                                       fontWeight: 700,
-                                      bgcolor: isDark ? "rgba(255, 255, 255, 0.1)" : "#f1f5f9",
+                                      bgcolor: isDark
+                                        ? "rgba(255, 255, 255, 0.1)"
+                                        : "#f1f5f9",
                                       color: theme.palette.text.primary,
                                     }}
                                   />
                                 )}
                               </Box>
-                              <Typography variant="caption" sx={{ color: theme.palette.text.secondary, fontSize: "0.78rem" }}>
+                              <Typography
+                                variant="caption"
+                                sx={{
+                                  color: theme.palette.text.secondary,
+                                  fontSize: "0.78rem",
+                                }}
+                              >
                                 {user.email}
                               </Typography>
                             </Box>
@@ -602,7 +671,13 @@ const Users = () => {
                         </TableCell>
 
                         {/* Role */}
-                        <TableCell sx={{ py: 2, px: 2.5, borderColor: theme.palette.divider }}>
+                        <TableCell
+                          sx={{
+                            py: 2,
+                            px: 2.5,
+                            borderColor: theme.palette.divider,
+                          }}
+                        >
                           <Chip
                             icon={
                               user.role === "admin" ? (
@@ -619,7 +694,9 @@ const Users = () => {
                             sx={{
                               fontWeight: 700,
                               fontSize: "0.68rem",
-                              bgcolor: isDark ? "rgba(255, 255, 255, 0.08)" : "#f1f5f9",
+                              bgcolor: isDark
+                                ? "rgba(255, 255, 255, 0.08)"
+                                : "#f1f5f9",
                               color: theme.palette.text.primary,
                               border: `1px solid ${theme.palette.divider}`,
                             }}
@@ -627,18 +704,30 @@ const Users = () => {
                         </TableCell>
 
                         {/* Status */}
-                        <TableCell sx={{ py: 2, px: 2.5, borderColor: theme.palette.divider }}>
+                        <TableCell
+                          sx={{
+                            py: 2,
+                            px: 2.5,
+                            borderColor: theme.palette.divider,
+                          }}
+                        >
                           {isInvited ? (
                             <Chip
                               icon={
                                 <FiberManualRecordRoundedIcon
-                                  sx={{ fontSize: "9px !important", color: theme.palette.background.warning }}
+                                  sx={{
+                                    fontSize: "9px !important",
+                                    color: theme.palette.background.warning,
+                                  }}
                                 />
                               }
                               label="Pending Invite"
                               size="small"
                               sx={{
-                                bgcolor: alpha(theme.palette.background.warning, 0.12),
+                                bgcolor: alpha(
+                                  theme.palette.background.warning,
+                                  0.12,
+                                ),
                                 color: isDark ? "#fbbf24" : "#b45309",
                                 fontWeight: 700,
                                 fontSize: "0.72rem",
@@ -649,13 +738,19 @@ const Users = () => {
                             <Chip
                               icon={
                                 <FiberManualRecordRoundedIcon
-                                  sx={{ fontSize: "9px !important", color: theme.palette.background.success }}
+                                  sx={{
+                                    fontSize: "9px !important",
+                                    color: theme.palette.background.success,
+                                  }}
                                 />
                               }
                               label="Active"
                               size="small"
                               sx={{
-                                bgcolor: alpha(theme.palette.background.success, 0.12),
+                                bgcolor: alpha(
+                                  theme.palette.background.success,
+                                  0.12,
+                                ),
                                 color: isDark ? "#4ade80" : "#047857",
                                 fontWeight: 700,
                                 fontSize: "0.72rem",
@@ -666,13 +761,19 @@ const Users = () => {
                             <Chip
                               icon={
                                 <FiberManualRecordRoundedIcon
-                                  sx={{ fontSize: "9px !important", color: theme.palette.background.danger }}
+                                  sx={{
+                                    fontSize: "9px !important",
+                                    color: theme.palette.background.danger,
+                                  }}
                                 />
                               }
                               label="Deactivated"
                               size="small"
                               sx={{
-                                bgcolor: alpha(theme.palette.background.danger, 0.12),
+                                bgcolor: alpha(
+                                  theme.palette.background.danger,
+                                  0.12,
+                                ),
                                 color: isDark ? "#f87171" : "#b91c1c",
                                 fontWeight: 700,
                                 fontSize: "0.72rem",
@@ -683,24 +784,54 @@ const Users = () => {
                         </TableCell>
 
                         {/* Phone */}
-                        <TableCell sx={{ py: 2, px: 2.5, borderColor: theme.palette.divider }}>
+                        <TableCell
+                          sx={{
+                            py: 2,
+                            px: 2.5,
+                            borderColor: theme.palette.divider,
+                          }}
+                        >
                           <Typography
                             variant="body2"
-                            sx={{ color: user.phone ? theme.palette.text.primary : theme.palette.text.secondary, fontSize: "0.84rem" }}
+                            sx={{
+                              color: user.phone
+                                ? theme.palette.text.primary
+                                : theme.palette.text.secondary,
+                              fontSize: "0.84rem",
+                            }}
                           >
                             {user.phone || "—"}
                           </Typography>
                         </TableCell>
 
                         {/* Created / Joined */}
-                        <TableCell sx={{ py: 2, px: 2.5, borderColor: theme.palette.divider }}>
-                          <Typography variant="body2" sx={{ color: theme.palette.text.secondary, fontSize: "0.84rem" }}>
+                        <TableCell
+                          sx={{
+                            py: 2,
+                            px: 2.5,
+                            borderColor: theme.palette.divider,
+                          }}
+                        >
+                          <Typography
+                            variant="body2"
+                            sx={{
+                              color: theme.palette.text.secondary,
+                              fontSize: "0.84rem",
+                            }}
+                          >
                             {formattedDate}
                           </Typography>
                         </TableCell>
 
                         {/* Actions */}
-                        <TableCell align="right" sx={{ py: 2, px: 2.5, borderColor: theme.palette.divider }}>
+                        <TableCell
+                          align="right"
+                          sx={{
+                            py: 2,
+                            px: 2.5,
+                            borderColor: theme.palette.divider,
+                          }}
+                        >
                           {isSelf ? (
                             <Chip
                               label="Owner"
@@ -715,20 +846,38 @@ const Users = () => {
                               }}
                             />
                           ) : (
-                            <Box sx={{ display: "flex", justifyContent: "flex-end", alignItems: "center", gap: 0.5 }}>
+                            <Box
+                              sx={{
+                                display: "flex",
+                                justifyContent: "flex-end",
+                                alignItems: "center",
+                                gap: 0.5,
+                              }}
+                            >
                               {/* Toggle Active Status */}
-                              <Tooltip title={user.isActive ? "Deactivate User" : "Activate User"}>
+                              <Tooltip
+                                title={
+                                  user.isActive
+                                    ? "Deactivate User"
+                                    : "Activate User"
+                                }
+                              >
                                 <IconButton
                                   size="small"
                                   onClick={() => handleToggleStatus(user)}
                                   sx={{
-                                    color: user.isActive ? theme.palette.text.secondary : theme.palette.background.success,
+                                    color: user.isActive
+                                      ? theme.palette.text.secondary
+                                      : theme.palette.background.success,
                                     "&:hover": {
                                       bgcolor: user.isActive
                                         ? isDark
                                           ? "rgba(255, 255, 255, 0.08)"
                                           : "#f1f5f9"
-                                        : alpha(theme.palette.background.success, 0.12),
+                                        : alpha(
+                                            theme.palette.background.success,
+                                            0.12,
+                                          ),
                                     },
                                   }}
                                 >
@@ -748,7 +897,10 @@ const Users = () => {
                                   sx={{
                                     color: theme.palette.background.danger,
                                     "&:hover": {
-                                      bgcolor: alpha(theme.palette.background.danger, 0.12),
+                                      bgcolor: alpha(
+                                        theme.palette.background.danger,
+                                        0.12,
+                                      ),
                                     },
                                   }}
                                 >
@@ -779,8 +931,12 @@ const Users = () => {
         onSubmit={handleSendInvite}
         width={480}
       >
-        <Typography variant="body2" sx={{ color: theme.palette.text.secondary, mb: 2.5, lineHeight: 1.5 }}>
-          Enter the full name, email, and role. An invitation link will be created for the member to complete their profile.
+        <Typography
+          variant="body2"
+          sx={{ color: theme.palette.text.secondary, mb: 2.5, lineHeight: 1.5 }}
+        >
+          Enter the full name, email, and role. An invitation link will be
+          created for the member to complete their profile.
         </Typography>
 
         {inviteError && (
@@ -872,8 +1028,12 @@ const Users = () => {
         onSubmit={() => setSuccessLinkModal(false)}
         width={500}
       >
-        <Typography variant="body2" sx={{ color: theme.palette.text.secondary, mb: 2.5, lineHeight: 1.5 }}>
-          Share this invitation link with the member. They can open it to set their password and activate their profile.
+        <Typography
+          variant="body2"
+          sx={{ color: theme.palette.text.secondary, mb: 2.5, lineHeight: 1.5 }}
+        >
+          Share this invitation link with the member. They can open it to set
+          their password and activate their profile.
         </Typography>
 
         <Box
@@ -904,7 +1064,9 @@ const Users = () => {
               size="small"
               onClick={() => handleCopyLink(generatedLink)}
               sx={{
-                background: copiedLink ? theme.palette.background.success : GRADIANT_COLOR,
+                background: copiedLink
+                  ? theme.palette.background.success
+                  : GRADIANT_COLOR,
                 color: "#ffffff",
                 width: 36,
                 height: 36,

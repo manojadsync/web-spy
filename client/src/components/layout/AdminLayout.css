@@ -37,13 +37,13 @@
 
 /* Sidebar Brand Header */
 .sidebar-brand {
-  height: 68px;
+  height: 80px;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 6px 4px;
+  padding: 10px 4px;
   gap: 3px;
   transition: border-color 0.25s ease;
 }
@@ -159,16 +159,22 @@
 
 /* --- Header / AppBar Styling --- */
 .admin-header {
-  height: 68px !important;
+  height: 80px !important;
   box-sizing: border-box !important;
   transition: background-color 0.25s ease, border-color 0.25s ease !important;
 }
 
 .admin-header-toolbar {
-  min-height: 67px !important;
-  height: 67px !important;
-  padding: 0 32px !important;
+  min-height: 79px !important;
+  height: 79px !important;
+  padding: 10px 32px !important;
   box-sizing: border-box !important;
+}
+
+@media (max-width: 600px) {
+  .admin-header-toolbar {
+    padding: 10px 16px !important;
+  }
 }
 
 /* --- Avatar & User Trigger Button --- */
